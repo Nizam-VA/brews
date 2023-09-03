@@ -1,3 +1,4 @@
+import 'package:firebase_demo/screen/home/settings_form.dart';
 import 'package:firebase_demo/services/auth.dart';
 import 'package:firebase_demo/services/database.dart';
 import 'package:flutter/material.dart';
@@ -13,6 +14,17 @@ class Home extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    void _showSettingsPanel() {
+      showModalBottomSheet(
+          context: context,
+          builder: (ctx) {
+            return Container(
+              padding: EdgeInsets.symmetric(vertical: 20, horizontal: 60),
+              child: SettingsForm(),
+            );
+          });
+    }
+
     return StreamProvider<List<Brew>>.value(
       value: DatabaseService().brews,
       initialData: [],
@@ -27,14 +39,25 @@ class Home extends StatelessWidget {
           elevation: 0,
           actions: [
             TextButton.icon(
-                onPressed: () async {
-                  await _auth.signOut();
-                },
-                icon: Icon(Icons.person, color: Colors.white),
-                label: Text(
-                  'Logout',
-                  style: TextStyle(color: Colors.white),
-                )),
+              onPressed: () async {
+                await _auth.signOut();
+              },
+              icon: Icon(Icons.person, color: Colors.white),
+              label: Text(
+                'Logout',
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
+            TextButton.icon(
+              onPressed: () async {
+                _showSettingsPanel();
+              },
+              icon: Icon(Icons.settings, color: Colors.white),
+              label: Text(
+                'Settings',
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
           ],
         ),
         body: BrewList(),
